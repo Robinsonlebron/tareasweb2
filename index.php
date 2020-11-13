@@ -14,19 +14,20 @@
   
   <?php require_once 'layaut/navbars.php';
         require_once 'logic.php';
-        require_once 'pages/estudiantes.php';
+        require_once 'pages/transaccion.php';
        require_once 'ServiceBasic/iService.php';
-       require_once 'pages/estudentService.php';
+       require_once 'pages/transaccionService.php';
+       require_once 'FileHandler/FileHandler.php';
+        require_once 'FileHandler/JsonFileHandler.php';
+        require_once 'pages/transaccionServiceFile.php';
+        require_once 'FileHandler/SerializationFileHandler.php';
 
        $logic = new logic();
-     $sevicios = new estudentService();
+     $sevicios = new transaccionServiceFile
+     ("pages/data");
 
-    $listEstudiante = $sevicios->GetList();
-      if(isset($_GET['carreraId'])){
+    $listTransaccion = $sevicios->GetList();
       
-        $listEstudiante = $logic->filtrado($listEstudiante,'carrera',$_GET['carreraId']);
-          
-        }
         
   ?> 
     <?php 
@@ -37,75 +38,68 @@
 
 <section class="jumbotron text-center">
   <div class="container">
-    <h1>Registro de estudiantes</h1>
-    <p class="lead text-muted">Pulse el boton para registrar los datos personales un estudiante</p>
+    <h1>Registro de Transacciones</h1>
+    <p class="lead text-muted">Pulse el boton para registrar una transaccion en el sistema</p>
     <p>
-      <a href="pages/agregar.php" class="btn btn-primary my-2">Registrar estudiante</a>
+      <a href="pages/agregar.php" class="btn btn-outline-secondary">Registrar transaccion</a>
+      <a href="pages/transaccionesUpload.php" class="btn btn-outline-danger">Subir transferencia</a>
       
     </p>
   </div>
 </section>
-      
-      <div class style="margin-bottom:1%;" class="row">
+    
 
-       <div class="col-md-13">
-
-       <div class="col-md-13">
-        <div class="col-md-12 btn-group ">
-
-          <a href="index.php?carreraId=Software" class="btn btn-dark text-light">Software</a>
-          <a href="index.php?carreraId=Seguridad informatica " class="btn btn-dark text-light">Seguridad</a>
-          <a href="index.php?carreraId=Mecatronica" class="btn btn-dark text-light">Mecatronica</a>
-          <a href="index.php?carreraId=Multimedia" class="btn btn-dark text-light">Multimedia</a>
-          <a href="index.php?carreraId=Sonido" class="btn btn-dark text-light">Sonido</a>
-          <a href="index.php" class="btn btn-dark text-light">Todos</a>
-
-           </div>
-           </div>
-           </div>
-           </div>
-           <div class="album py-5 bg-light">
+   
+<div class="album py-5 bg-light">
     <div class="container">
 
    
 
        <div class="row">
-       <?php if(empty($listEstudiante)):?>
-       <h2>No hay Estudiantes registrados</h2>
+       <?php if(empty($listTransaccion)):?>
+       <h2>No hay transacciones registradas</h2>
        <?php  else: ?>
 
-       <?php foreach ($listEstudiante as $value): ?>         
-          <div class="col-md-4">
-             <div class="card" style="width: 18rem;">
-                  <div class="col-md-4">
-      <img src="..." class="card-img" alt="...">
+        <div class="container">
+      <table class="table mt-5">
+        <thead class="thead-dark">
+          <tr>
+          <th scope="col">ID</th>
+            <th scope="col">Fecha & Hora</th>
+            <th scope="col">Monto</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"><a href="download.php" type="button" class="btn btn-outline-success">Descargar Transacciones</a></th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach($listTransaccion as $transaccion ): 
+             
+            ?>
+          <tr>
+          
+            
+            <td><?php echo $transaccion->id; ?></td>
+            <td><?php echo $transaccion->fecha; ?></td>
+            <td><?php echo $transaccion->monto; ?></td>
+            <td><?php echo $transaccion->descripcion; ?></td>
+            <td></td>
+            <td><a href="pages/editar.php?id=<?php echo $transaccion->id;?>" class="btn btn-outline-primary">Modificar</a><a href="pages/eliminar.php?id=<?php echo $transaccion->id;?>" class="btn btn-outline-danger">Eliminar</a></td>
+            
+            
+            
+          </tr>
+          <?php endforeach;?>
+        </tbody>
+      </table>
     </div>
-                 <div class="card-header"><?php echo $value->nombre." ".$value->apellido; ?></div>
-                        <ul class="list-group list-group-flush">
-         <li class="list-group-item"><?php echo $value->carrera?></li>
-<?php if($value->estatus == 'activo'):?>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" checked disabled>
-              <label class="form-check-label text-success" for="defaultCheck1">Activo</label>
-            </div></td>
-          <?php elseif($value->estatus == 'inactivo'):?>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1"  disabled>
-              <label class="form-check-label text-danger" for="defaultCheck1">Inactivo</label>
-            </div></td>
-          <?php endif; ?>
-
-         
+    
        </ul>
-       <div class="card-body">
-    <a href="<?php echo "pages/editar.php?editarId={$value->id}";?>" class="card-link">Editar</a>
-    <a href="<?php echo "pages/detalles.php?detalleId={$value->id}";?>" class="card-link">Detalles</a>
-    <a href="<?php echo "eliminar.php?eliminarId={$value->id}";?>" class="card-link">Eliminar</a>
-
-  </div>
       </div>
     </div>
-    <?php endforeach?>
+  
        <?php endif;?>
   </div>
 </div>

@@ -1,0 +1,5 @@
+Se ha registrado una nueva transaccion con el ID: 4 a las 2020-11-13 02:33:52
+Se ha registrado una nueva transaccion con el ID: 2 a las 2020-11-13 04:04:27
+Se ha registrado una nueva transaccion con el ID: 3 a las 2020-11-13 04:04:43
+Se ha eliminado una transaccion con el ID:  a las 2020-11-13 04:05:13
+Se ha editado una transaccion con el ID:  a las 2020-11-13 04:05:37

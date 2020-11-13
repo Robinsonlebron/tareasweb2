@@ -9,90 +9,92 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../css/bootstrap.min.css">
 
-    <title>Modificacion de estudiante</title>
+    <title>Modificacion de transaccion</title>
   </head>
   <body>
   <?php require_once '../layaut/navbars.php';
         require_once '../logic.php';
-        require_once 'estudiantes.php';
+        require_once '../pages/transaccion.php';
         require_once '../ServiceBasic/iService.php';
-        require_once 'estudentService.php';
+        require_once '../pages/transaccionService.php';
+        require_once '../FileHandler/FileHandler.php';
+        require_once '../FileHandler/JsonFileHandler.php';
+        require_once '../pages/transaccionServiceFile.php';
+        require_once '../FileHandler/SerializationFileHandler.php';
 
         $layaut = new navbar(true,true,false,true,false);
-        $servicio = new estudentService();
-        $carreras = ['Software','Mecatronica','Sonido','Seguridad informatica','Multimedia'];
-        $checked;
+        $servicio = new transaccionServiceFile();
+       
 
-        if(!$_POST['check']== null){
-          $status = $_POST['check'];
-        }else{
-          $status = 'inactivo';
-        }
+       
 
-        if(isset($_GET['editarId'])){
-          $estudianteId = $_GET['editarId'];
-          $element = $servicio->GetById($estudianteId);
-          if($element->estatus == 'activo'){
-            $checked = 'checked';
-          }else{
-            $checked = "";
-          }
-          if(isset($_POST['nEdit']) && isset($_POST['aEdit']) && isset($_POST['carreraEdit'])){
+        if(isset($_GET['id'])){
+          $transaccionId = $_GET['id'];
+          $element = $servicio->GetById($transaccionId);
+          
+          if(isset($_POST['fecha']) && isset($_POST['monto']) && isset($_POST['descripcion'])){
             
-              $editEstudiante = new estudiantes();
-              $editEstudiante->initialize($estudianteId,$_POST['nEdit'],$_POST['aEdit'],$status,$_POST['carreraEdit'],'photo');
-              $servicio->Update($estudianteId,$editEstudiante);
+              $editTransaccion = new transaccion();
+              $editTransaccion->initialize($transaccionId,$_POST['fecha'],$_POST['monto'],$_POST['descripcion']);
+              $servicio->Update($transaccionId,$editTransaccion);
+
+              $path = 'archivo.txt';
+            $file = fopen($path, 'a');
+            $Date = date("Y-m-d H:i:s");
+            fwrite($file, "Se ha editado una transaccion con el ID: $newTransaccion->id a las $Date"."\n");
+            fclose($file);
+
               header('Location: ../index.php');
               exit();
           }
         }else{
           header('Location: ../index.php');
-          exit();
+              exit();
+          
         }
-        foreach($carreras as $value){
-          if($element->carrera == $value){
-            $count = array_search($value,$carreras);
-            unset($carreras[$count]);
-            $carreras = array_values($carreras);
-            array_unshift($carreras,$value);
-          }
-        }
+
+
+        
+        
       
   ?> 
-    <?php $layaut->nav();?>
-    <div class="container pt-5">
-    <form action="editar.php?editarId=<?php echo $element->id?>" method="POST">
-    <div class="form-group">
-      <input type="text" class="form-control" id="ids" placeholder="" name="ids" value='<?php echo $estudianteId?>' hidden>
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput" class="font-weight-bold">Nuevo Nombre</label>
-      <input type="text" class="form-control" id="nEdit" placeholder="" name="nEdit" value='<?php echo $element->nombre;?>'>
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput2" class="font-weight-bold">Nuevo Apellido</label>
-      <input type="text" class="form-control" id="aEdit" placeholder="" name="aEdit" value='<?php echo $element->apellido;?>'>
-    </div>
-    <label for="validationTooltip01" class="font-weight-bold">Nueva Carrera</label>
-     <select class="custom-select"  name="carreraEdit" tabindex="3" id="carreraEdit">
-     <?php foreach ($carreras as $materias):?>
-      <option value="<?php echo $materias;?>" name="cEdit" id="cEdit"><?php echo $materias;?></option>
-     <?php endforeach; ?>
-     </select>
-     <div class="form-check my-3">
-     
-    <input class="form-check-input" type="checkbox" value="activo" id="check" name="check" <?php echo $checked; ?>>
-    <label class="form-check-label " for="defaultCheck1">Marcar para activar al estudiante</label>
-  </div>
-    <div class="input-group mb-3">
-        <div class="input-group-append">
-        <button class="btn btn-outline-primary mt-2" type="submit" id="button-addon3">Cambiar</button>
+  
+  <?php $layaut->nav();?>
+
+ <div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body ">
+        <h5 class="card-title ">Modificar transaccion</h5>
         
-        </div>
+        <form action="editar.php?id=<?php echo $element->id?>" method="POST">
+
+  <div class="form-group">
+    <label for="fecha">Fecha & Hora</label>
+    <input type="datetime-local" class="form-control" id="fecha" name="fecha" value='<?php echo $element->fecha?>'>
+  </div>
+
+  <div class="form-group">
+    <label for="monto">Monto</label>
+    <input type="text" class="form-control" id="monto" name="monto" value='<?php echo $element->monto?>'>
+  </div>
+
+  <div class="form-group">
+    <label for="descripcion">Descripcion</label>
+    <input type="text" class="form-control" id="descripcion" name="descripcion" value='<?php echo $element->descripcion?>'>
+  </div>
+
+  <button type="submit" class="btn btn-outline-success">Modificar transaccion</button>
+  <a href="../index.php" class="btn btn-outline-primary">Inicio</a>
+</form>
+        
       </div>
-    </form> 
     </div>
+  </div>
+
     
+
+</main>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

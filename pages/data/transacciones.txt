@@ -1,0 +1,1 @@
+a:2:{i:0;O:11:"transaccion":5:{s:2:"id";i:2;s:5:"fecha";s:16:"2020-11-12T00:00";s:5:"monto";s:3:"500";s:11:"descripcion";s:4:"pago";s:5:"photo";s:0:"";}i:1;O:11:"transaccion":4:{s:2:"id";s:1:"3";s:5:"fecha";s:16:"2020-11-12T19:04";s:5:"monto";s:4:"1000";s:11:"descripcion";s:5:"deuda";}}

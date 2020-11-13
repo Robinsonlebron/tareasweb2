@@ -1,5 +1,5 @@
 <?php
- class estudentService implements Iservicios{
+ class transaccionService implements Iservicios{
 
     private $logic;
     private $cookieName;
@@ -15,41 +15,41 @@
 
     public function GetList()
     {
-        $listEstudiantes = array();
+        $listTransaccion = array();
         if(isset($_COOKIE[$this->cookieName])){
                 
-            $listEstudiantesDecode = json_decode($_COOKIE[$this->cookieName],false);
+            $listTransaccionDecode = json_decode($_COOKIE[$this->cookieName],false);
 
-            foreach($listEstudiantesDecode as $elementDecode){
-                $elemet = new estudiantes();
+            foreach($listTransaccionDecode as $elementDecode){
+                $elemet = new transaccion();
                 $elemet->set($elementDecode);
-                array_push($listEstudiantes,$elemet); 
+                array_push($listTransaccion,$elemet); 
 
             }
         }else{
-            setcookie($this->cookieName,json_encode($listEstudiantes),$this->logic->GetcookieTime(),"/"); 
+            setcookie($this->cookieName,json_encode($listTransaccion),$this->logic->GetcookieTime(),"/"); 
         }
 
-        return $listEstudiantes;
+        return $listTransaccion;
     }
 
     public function GetById($id)
     {
-        $listEstudiantes = $this->GetList();
-        $estudiante = $this->logic->filtrado($listEstudiantes,'id',$id)[0];
-        return $estudiante;
+        $listTransaccion = $this->GetList();
+        $Transaccion = $this->logic->filtrado($listTransaccion,'id',$id)[0];
+        return $Transaccion;
     }
 
     public function Add($entidad)
     {
-        $listEstudiantes = $this->GetList();
-        $estudianteId  = 1;
+        $listTransaccion = $this->GetList();
+        $transaccionId  = 1;
 
-        if(!empty($listEstudiantes)){
-            $ultimo = $this->logic->cont($listEstudiantes);
-            $estudianteId = $ultimo->id+1;
+        if(!empty($listTransaccion)){
+            $ultimo = $this->logic->cont($listTransaccion);
+            $transaccionId = $ultimo->id+1;
         }
-        $entidad->id = $estudianteId;
+        $entidad->id = $transaccionId;
         $entidad->photo = "";
         $photoFile = $_FILES['photo'];
         if(isset($_FILES['photo'])){
@@ -61,7 +61,7 @@
                 $typeReplace = str_replace("image/","",$_FILES['photo']['type']);
                 $type = $photoFile['type'];
                 $size =$photoFile['size'];
-                $name = "../img/estudiante".$estudianteId .".".$typeReplace;
+                $name = "../img/estudiante".$transaccionId .".".$typeReplace;
                 $tmpName = $photoFile['tmp_name'];
     
                 $success = $this->logic->uploadIMG("img",$name,$tmpName,$type,$size);
@@ -71,14 +71,14 @@
             }
             
         }
-        array_push($listEstudiantes,$entidad);
-        setcookie($this->cookieName,json_encode($listEstudiantes),$this->logic->GetcookieTime(),"/"); 
+        array_push($listTransaccion,$entidad);
+        setcookie($this->cookieName,json_encode($listTransaccion),$this->logic->GetcookieTime(),"/"); 
     }
     public function Update($id, $entidad)
     {
         $elemet = $this->GetById($id);
-        $listEstudiantes = $this->GetList();
-        $elementIndex = $this->logic->index($listEstudiantes,'id',$id);
+        $listTransaccion = $this->GetList();
+        $elementIndex = $this->logic->index($listTransaccion,'id',$id);
 
         if(isset($_FILES['photo'])){
 
@@ -101,18 +101,18 @@
            
         }
 
-        $listEstudiantes[$elementIndex] = $entidad;
-        setcookie($this->cookieName,json_encode($listEstudiantes),$this->logic->GetcookieTime(),"/"); 
+        $listTransaccion[$elementIndex] = $entidad;
+        setcookie($this->cookieName,json_encode($listTransaccion),$this->logic->GetcookieTime(),"/"); 
     }
 
     public function Delete($id)
     {
-        $listEstudiantes = $this->GetList();
-        $elementIndex = $this->logic->index($listEstudiantes,'id',$id); 
-        unset($listEstudiantes[$elementIndex]);
+        $listTransaccion = $this->GetList();
+        $elementIndex = $this->logic->index($listTransaccion,'id',$id); 
+        unset($listTransaccion[$elementIndex]);
 
-        $listEstudiantes = array_values($listEstudiantes);
-        setcookie($this->cookieName,json_encode($listEstudiantes),$this->logic->GetcookieTime(),"/"); 
+        $listTransaccion = array_values($listTransaccion);
+        setcookie($this->cookieName,json_encode($listTransaccion),$this->logic->GetcookieTime(),"/"); 
 
     }
  }
